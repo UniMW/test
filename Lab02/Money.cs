@@ -1,0 +1,81 @@
+namespace Lab02;
+
+public class Money : IEquatable<Money>
+{
+    public decimal Value { get; init; }
+    public Currency Currency { get; init; }
+
+    public static Money operator +(Money a, Money b)
+    {
+        if (a.Currency == b.Currency)
+        {
+            return new Money { Value = a.Value + b.Value, Currency = a.Currency };
+        }
+        throw new ArgumentException("Cannot add multiple currencies!");
+    }
+
+    public static Money operator -(Money a, Money b)
+    {
+        if (a.Currency == b.Currency)
+        {
+            return new Money { Value = a.Value - b.Value, Currency = a.Currency };
+        }
+        throw new ArgumentException("Cannot subtract multiple currencies!");
+    }
+    // public static Money operator <(Money a, Money b)
+    // {
+    //     if (a.Currency == b.Currency)
+    //     {
+    //         if (a.Value < b.Value)
+    //         {
+    //             return 
+    //         }
+    //     }
+    //     throw new ArgumentException("Cannot subtract multiple currencies!");
+    // }
+    public bool Equals(Money? other)
+    {
+        if (other is null) return false;
+        if (ReferenceEquals(this, other)) return true;
+        return Value == other.Value && Currency == other.Currency;
+    }
+    public static bool operator ==(Money? a, Money b)
+    {
+        return Equals(a, b);
+    }
+
+    public static bool operator !=(Money? a, Money b)
+    {
+        return !(a == b);
+    }
+
+    public override bool Equals(object? obj)
+    {
+        if (obj is null) return false;
+        if (ReferenceEquals(this, obj)) return true;
+        if (obj.GetType() != GetType()) return false;
+        return Equals((Money)obj);
+    }
+
+    public override int GetHashCode()
+    {
+        return HashCode.Combine(Value, (int)Currency);
+    }
+    
+    public static implicit operator decimal (Money money)
+    {
+        return money.Value;
+    }
+
+    public override string ToString()
+    {
+        return $"{Value:N2} {Currency}";
+    }
+}
+
+public enum Currency 
+{
+    PLN,
+    EUR,
+    USD
+}
